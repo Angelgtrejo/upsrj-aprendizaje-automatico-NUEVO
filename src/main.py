@@ -37,7 +37,7 @@ def introduction():
         print(f"- Estudiantes cargados: {total}")
 
         # Filtrar estudiantes con calificación > 8
-        aprobados = intro.get_above(df, col="calificacion", n=8)
+        aprobados = intro.get_above(df, col="promedio", n=8)
         if aprobados is None or aprobados.empty:
             print("Error: No se pudo filtrar estudiantes aprobados.\n")
             return os.EX_SOFTWARE
@@ -107,7 +107,7 @@ def introduction():
             plt.legend()
             plt.grid(True)
             plt.tight_layout()
-            plt.savefig("analisis.png", dpi=300)
+            plt.savefig(os.path.join(os.path.basename(OUTPUT, "analisis.png")), dpi=300)
             plt.show()
             print("Gráfica guardada como 'analisis.png'\n")
         except:
