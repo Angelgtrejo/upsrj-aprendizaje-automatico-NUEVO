@@ -44,14 +44,18 @@ def introduction():
         print(f"- Estudiantes aprobados:\n{aprobados}")
 
         # Agrupar por carrera y calcular promedio
-        promedio_por_carrera = intro.group_and_average(aprobados, group="carrera", avg="calificacion")
+        promedio_por_carrera = intro.group_and_average(aprobados, group="carrera", avg="promedio")
         if promedio_por_carrera is None or promedio_por_carrera.empty:
             print("Error: No se pudo calcular el promedio por carrera.\n")
             return os.EX_SOFTWARE
         print(f"- Promedio por carrera:\n{promedio_por_carrera}")
 
+        # Crear carpeta 'outputs' si no existe
+        OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+
         # Exportar resultados
-        OUTPUT = os.path.join(os.path.dirname(__file__), "outputs", "aprobados.csv")
+        OUTPUT = os.path.join(OUTPUT_DIR, "aprobados.csv")
         try:
             intro.export_data(aprobados, OUTPUT)
             print(f"- Datos exportados a: {OUTPUT}")

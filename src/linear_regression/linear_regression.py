@@ -18,7 +18,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from linear_regression.data_source import DataSource as ds
 
 class LinearRegressionCompare:
-    def __init__(self, url: str, hist: str, base: str, f1: str, f2: str, out: str):
+    def _init_(self, url: str, hist: str, base: str, f1: str, f2: str, out: str):
         self.source = ds(url)
         self.histogram = hist
         # Característica base de comparación
@@ -44,8 +44,8 @@ class LinearRegressionCompare:
         self.m1 = self.create_model()
         self.m2 = self.create_model()
         # Entrenamiento de modelos
-        self.train_model(self.m1, self.d1[0])
-        self.train_model(self.m2, self.d2[0])
+        self.train_model(self.m1, self.d1)
+        self.train_model(self.m2, self.d2)
         # Coeficientes de regresor y la intercepción
         self.get_coef_and_int(self.m1)
         self.get_coef_and_int(self.m2)
@@ -79,7 +79,7 @@ class LinearRegressionCompare:
         Returns:
             tuple: (x_train, x_test, y_train, y_test)
         """
-        x_train, x_test, y_train, y_test = None, None, None, None
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=prc, random_state=random_state)
         return (x_train, x_test, y_train, y_test)
     
     # TODO: Define un método que devuelva un objeto "linear_model.LinearRegression" de scikit-learn.
@@ -91,13 +91,13 @@ class LinearRegressionCompare:
         Returns:
             LinearRegression: Modelo vacío listo para entrenar.
         """
-        return None
+        return linear_model.LinearRegression()
     
     # TODO: Define un método que entrene un modelo de entrada "linear_model" de scikit-learn
     #       con la información de entrada "data".
     # NOTE: https://numpy.org/doc/stable/reference/generated/numpy.ndarray.reshape.html
     #       https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.fit
-    def train_model(self, model: linear_model.LinearRegression, data: np.ndarray) -> None:
+    def train_model(self, model: linear_model.LinearRegression, data: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]) -> None:
         """
         Entrena el modelo con los datos de entrenamiento.
 
@@ -105,7 +105,9 @@ class LinearRegressionCompare:
             model (LinearRegression): Modelo a entrenar.
             data (tuple): (x_train, x_test, y_train, y_test)
         """
-        pass
+        x_train, x_test, y_train, y_test = data
+        x_train_reshaped = x_train.reshape(-1, 1)
+        model.fit(x_train_reshaped, y_train)
     
     # TODO: Define un método que obtenga los coeficientes de regresor y la intercepción
     #       de un modelo de entrada "linear_model" de scikit-learn.
@@ -117,7 +119,9 @@ class LinearRegressionCompare:
         Args:
             model (LinearRegression): Modelo entrenado.
         """
-        pass
+        coef_value = model.coef_[0] if isinstance(model.coef_, np.ndarray) else model.coef_
+        print(f"Coeficientes: {coef_value}")
+        print(f"Intercepción: {model.intercept_}")
     
     # TODO: Define un método que haga una predicción con el modelo y carácteristica de entrada.
     # NOTE: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.predict
@@ -132,7 +136,8 @@ class LinearRegressionCompare:
         Returns:
             np.ndarray: Predicciones.
         """
-        prediction = None
+        x_reshaped = x.reshape(-1, 1)
+        prediction = model.predict(x_reshaped)
         return prediction
     
     def evaluate(self, y: np.ndarray, prediction: np.ndarray) -> None:
@@ -144,13 +149,14 @@ class LinearRegressionCompare:
         
     def plot_model(self, model: linear_model.LinearRegression, x: np.ndarray, y: np.ndarray, x_label: str, y_label: str, out: str) -> None:
         try:
+            coef_value = model.coef_[0] if isinstance(model.coef_, np.ndarray) else model.coef_
+            plt.figure()
             plt.scatter(x, y, color='blue')
-            plt.plot(x, model.coef_ * x + model.intercept_, '-r')
+            plt.plot(x, coef_value * x + model.intercept_, '-r')
             plt.xlabel(x_label)
             plt.ylabel(y_label)
             plt.savefig(out)
+            plt.close()
             print(f"Se creó gráfico de regresión lineal en {out}")
         except Exception as e:
-            print(f"Error: no se pudo crear gráfico del modelo: {e}")
-    
-    
+            print(f"Error: no se pudo crear gráfico del modelo: {e}")
