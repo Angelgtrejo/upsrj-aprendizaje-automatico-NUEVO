@@ -50,12 +50,8 @@ def introduction():
             return os.EX_SOFTWARE
         print(f"- Promedio por carrera:\n{promedio_por_carrera}")
 
-        # Crear carpeta 'outputs' si no existe
-        OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
-
         # Exportar resultados
-        OUTPUT = os.path.join(OUTPUT_DIR, "aprobados.csv")
+        OUTPUT = os.path.join(os.path.dirname(__file__), "outputs", "aprobados.csv")
         try:
             intro.export_data(aprobados, OUTPUT)
             print(f"- Datos exportados a: {OUTPUT}")
@@ -107,7 +103,7 @@ def introduction():
             plt.legend()
             plt.grid(True)
             plt.tight_layout()
-            plt.savefig(os.path.join(os.path.basename(OUTPUT, "analisis.png")), dpi=300)
+            plt.savefig(os.path.join(os.path.dirname(OUTPUT), "analisis.png"), dpi=300)
             plt.show()
             print("Gráfica guardada como 'analisis.png'\n")
         except:
@@ -232,5 +228,7 @@ def main():
     # Return de la función: status EX_OK (0) | EX_SOFTWARE (70)
     return status  
 
-if __name__ == "__main__":
+if __name__ == "_main_":
     sys.exit(main())
+
+    sys.exit(not result1.wasSuccessful() and not result2.wasSuccessful() )

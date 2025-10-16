@@ -61,80 +61,38 @@ class LinearRegressionCompare:
         self.plot_model(model=self.m2, x=self.x2, y=self.y, x_label=self.f2.capitalize(), y_label=self.base.capitalize(),
                         out=os.path.join(out, f"linear_regression_{self.f2.lower()}_{self.base.lower()}.png"))
         
-    # TODO: Define un método que prepare la información para ser analizada por regresión lineal.
-    #       Recuerda que al hacer un modelo de aprendizaje automático debemos dividir la información disponible en
-    #       datos de entrenamiento y datos de pruebas, por lo tanto, a la salida debe 
-    #       haber un tuple(x_train, x_test, y_train, y_test) de arreglos de numpy.
-    # NOTE: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
     def prepare_data(self, x:np.ndarray, y:np.ndarray, prc: float, random_state: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         Divide los datos en conjuntos de entrenamiento y prueba.
-
-        Args:
-            x (np.ndarray): Característica independiente.
-            y (np.ndarray): Variable dependiente.
-            prc (float): Proporción para prueba (entre 0 y 1).
-            random_state (int): Semilla para reproducibilidad.
-
-        Returns:
-            tuple: (x_train, x_test, y_train, y_test)
         """
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=prc, random_state=random_state)
         return (x_train, x_test, y_train, y_test)
     
-    # TODO: Define un método que devuelva un objeto "linear_model.LinearRegression" de scikit-learn.
-    # NOTE: https://scikit-learn.org/stable/modules/linear_model.html
     def create_model(self) -> linear_model.LinearRegression:
         """
         Crea un modelo de regresión lineal.
-
-        Returns:
-            LinearRegression: Modelo vacío listo para entrenar.
         """
         return linear_model.LinearRegression()
     
-    # TODO: Define un método que entrene un modelo de entrada "linear_model" de scikit-learn
-    #       con la información de entrada "data".
-    # NOTE: https://numpy.org/doc/stable/reference/generated/numpy.ndarray.reshape.html
-    #       https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.fit
     def train_model(self, model: linear_model.LinearRegression, data: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]) -> None:
         """
         Entrena el modelo con los datos de entrenamiento.
-
-        Args:
-            model (LinearRegression): Modelo a entrenar.
-            data (tuple): (x_train, x_test, y_train, y_test)
         """
         x_train, x_test, y_train, y_test = data
         x_train_reshaped = x_train.reshape(-1, 1)
         model.fit(x_train_reshaped, y_train)
     
-    # TODO: Define un método que obtenga los coeficientes de regresor y la intercepción
-    #       de un modelo de entrada "linear_model" de scikit-learn.
-    # NOTE: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression
     def get_coef_and_int(self, model: linear_model.LinearRegression) -> None:
         """
         Imprime los coeficientes y la intercepción del modelo.
-
-        Args:
-            model (LinearRegression): Modelo entrenado.
         """
         coef_value = model.coef_[0] if isinstance(model.coef_, np.ndarray) else model.coef_
         print(f"Coeficientes: {coef_value}")
         print(f"Intercepción: {model.intercept_}")
     
-    # TODO: Define un método que haga una predicción con el modelo y carácteristica de entrada.
-    # NOTE: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.predict
     def predict(self, model: linear_model.LinearRegression, x: np.ndarray) -> np.ndarray:
         """
         Realiza predicciones con el modelo.
-
-        Args:
-            model (LinearRegression): Modelo entrenado.
-            x (np.ndarray): Datos de entrada.
-
-        Returns:
-            np.ndarray: Predicciones.
         """
         x_reshaped = x.reshape(-1, 1)
         prediction = model.predict(x_reshaped)
@@ -159,4 +117,4 @@ class LinearRegressionCompare:
             plt.close()
             print(f"Se creó gráfico de regresión lineal en {out}")
         except Exception as e:
-            print(f"Error: no se pudo crear gráfico del modelo: {e}")
+            print(f"Error: no se pudo crear gráfico del modelo: {e}")

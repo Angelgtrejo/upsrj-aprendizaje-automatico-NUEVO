@@ -92,7 +92,8 @@ def square_matrix(n: int, start: int, stop: int) -> np.ndarray:
     - np.ndarray
         Matriz cuadrada con valores enteros.
     """
-    matrix =  np.matrix(np.arange(start, stop).reshape(n, n))
+    data = np.arange(start, stop, dtype=int).reshape(n, n)
+    matrix = np.matrix(data)
     return matrix
 
 # Ejercicio 5
@@ -138,7 +139,7 @@ def get_statistics(arg: np.ndarray) -> tuple[float, float, float]:
         Promedio, mediana y desviación estándar como flotantes.
     """
     mean = np.mean(arg)
-    median = np.median(arg) 
+    median = np.median(arg)
     standard = np.std(arg)
     return (mean, median, standard)
 
